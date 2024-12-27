@@ -11,20 +11,19 @@ class Download:
     def baixarArquivo(self, url): # Verifica a origem do arquivo e já retorna o nome do arquivo e um objeto ImageFile correspondente. OBS: NESSA ORDEM!!!!!
         # Gerar um nome único para o arquivo baseado no timestamp
         timestamp = int(time.time())  # Usar o timestamp atual
-        file_name = f"downloaded_image_{timestamp}"
 
         # Verificar se a URL é da internet ou local
         if url.lower().startswith(PROTOCOLOS_SUPORTADOS):
             try:
+                file_path = f"downloaded_image_{timestamp}"
                 # Fazer o download da imagem com barra de progresso
                 response = requests.get(url, stream=True)
                 response.raise_for_status()
-
                 # Obter o tamanho total do arquivo (em bytes)
                 total_size = int(response.headers.get('content-length', 0))
 
                 # Baixar com barra de progresso
-                with open(file_name, "wb") as file, tqdm(
+                with open(file_path, "wb") as file, tqdm(
                     desc="Baixando",
                     total=total_size,
                     unit="B",
@@ -35,59 +34,63 @@ class Download:
                         file.write(chunk)
                         bar.update(len(chunk))
 
-                print(f"Imagem baixada como '{file_name}'.")
+                print(f"Imagem baixada como '{file_path}'.")
 
                 # Abrir a imagem baixada com Pillow
-                image = Image.open(file_name)
-
+                image = Image.open(file_path)
                 # Verificar se o formato é válido
                 if image.format not in FORMATOS:
                     print(f"Formato {image.format} não é válido. A imagem não será salva.")
-                    os.remove(file_name)  # Remover o arquivo binário inválido
-                    return None, None
+                    os.remove(file_path)  # Remover o arquivo binário inválido
+                    raise ValueError
 
                 # Se o formato for válido, salvar a imagem com o formato correto
-                new_file_name = f"{file_name}.{image.format.lower()}"
-                image.save(new_file_name, image.format.lower())
-                print(f"Imagem salva como '{new_file_name}'.")
+                new_file_path = f"{file_path}.{image.format.lower()}"
+                path = rf"C:\Users\luand\OneDrive\Documentos\2024-indefinido\UFPI\2024.2\Laboratorio de Programacao\ProjetoFinal\DataAnalysis---Laboratorio-de-Programacao\corrente\{new_file_path}"
+                image.save(path, image.format.lower())
+                print(f"Imagem salva como '{new_file_path}'.")
 
                 # Remover o arquivo binário
-                os.remove(file_name)
+                os.remove(file_path)
+                # Pegar apenas o nome do arquivo
 
-                return new_file_name, image
+                return new_file_path, image
 
             except Exception as e:
                 print(f"Erro ao baixar a imagem: {e}")
-                return None, None
+                raise ConnectionError
         else:
             # Tratar como caminho local
             if os.path.exists(url):
                 try:
+                    file_path = f"local_image_{timestamp}"
                     # Abrir a imagem local com Pillow
                     image = Image.open(url)
-                    print("Imagem carregada a partir do caminho local.")
+                    print(f"Imagem carregada como {file_path} a partir do caminho local.")
 
                     # Verificar se o formato da imagem local é válido
                     if image.format not in FORMATOS:
                         print(f"Formato {image.format} não é válido. A imagem não será salva.")
-                        return None, None
-
-                    return url, image
+                        raise TypeError
+                    file_path = file_path + f".{image.format.lower()}"
+                    path = rf"C:\Users\luand\OneDrive\Documentos\2024-indefinido\UFPI\2024.2\Laboratorio de Programacao\ProjetoFinal\DataAnalysis---Laboratorio-de-Programacao\corrente\{file_path}"
+                    image.save(path, image.format.lower())
+                    return file_path, image
                 except Exception as e:
                     print(f"Erro ao carregar a imagem local: {e}")
-                    return None, None
+                    raise TypeError
             else:
                 print("Caminho local inválido ou arquivo não encontrado.")
-                return None, None
+                raise NameError
 """
 # Testar a classe Download
 url = input("Digite a URL da imagem ou o caminho local: ")
 download = Download()
-file_name, imagem = download.baixarArquivo(url)
-#foto = Imagem(file_name, imagem) -- Formato básico esperado para criação de objeto da classe Imagem
+file_path, imagem = download.baixarArquivo(url)
+#foto = Imagem(file_path, imagem) -- Formato básico esperado para criação de objeto da classe Imagem
 if imagem:
     # Recarregar a imagem salva no formato correto fora do método baixarArquivo
-    imagem = Image.open(file_name)
+    imagem = Image.open(file_path)
     # Exibir a imagem
     imagem.show()
 """

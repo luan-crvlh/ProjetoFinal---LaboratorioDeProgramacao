@@ -1,0 +1,43 @@
+Decisões:
+Classe Download:
+baixarArquivo: Vai baixar os arquivos por url ou detectar que já estão na máquina
+e colocar em uma pasta "corrente".
+além disso, já retorna um ImageFile.
+
+Classe Imagem:
+métodos para resgatar as imagens baixadas e mostrar.
+
+Classes Filtro:
+cada classe de filtro possui um método para aplicar o filtro na imagem que será passada e salvar
+a nova imagem (agora filtrada) no diretório atual.
+Convenções: nomear os arquivos de acordo com o filtro e caso disponibilize a imagem, salvar em nova variável
+
+Classe Principal:
+tem como entrada a url ou caminho da imagem desejada
+tem o menu interativo com as opções para escolha do usuário
+cria os objetos e chama os métodos para funcionalidade
+seleção de filtro: a classe principal pode chamar um método para criar um filtro
+da classe de filtros, que é escolhido pelo usuário
+
+Download - baixa e envia um objeto ImageFile - Pillow
+Imagem - classe de controle dos objetos pillow que a download envia
+Filtros - organização das aplicações de filtro
+Principal - Executar os passos de acordo com a vontade do usuário e mostrar o que ele tá fazendo.
+
+Fluxo de execução:
+Usuário
+0 - Apresentar opções
+1 - Baixar arquivo ou resgatar local
+2 - Mostrar imagem ou mensagem de erro
+3 - Apresentar opções
+4 - Aplicar filtro, é salva a imagem filtrada e é mostrada na tela
+5 - Apresentar opções
+6 - Listar arquivos - mostra todo o conteúdo (imagens) da pasta "corrente"
+7 - Sair
+
+Tarefa de casa
+Luanderson: filtro negativo - modificar os parâmetros do método
+Imagem: esboçar a classe imagem, preparar o ambiente para controle dos objetos ImageFile
+Filtros: quem puder, já ir implementando o seu
+Principal: implementar a função número 1 (baixar imagem) - OBS: executar o código em CMD (admin)
+
