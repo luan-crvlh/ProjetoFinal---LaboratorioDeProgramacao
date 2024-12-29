@@ -33,16 +33,7 @@ class Filtro_Negativo:
         path = rf"C:\Users\luand\OneDrive\Documentos\2024-indefinido\UFPI\2024.2\Laboratorio de Programacao\ProjetoFinal\DataAnalysis---Laboratorio-de-Programacao\corrente\negative_{objeto_imagem.nome}"
 
         self.negativo_image.save(path, self.negativo_image.format)
-"""
-if __name__ == "__main__":
-  #url = r"C:\Users\luand\OneDrive\Documentos\2024-indefinido\UFPI\2024.2\Estrutura de Dados\PDF's\11895-verde.jpg"
-  url = "https://www.aviamentossaopaulo.com.br/octopus/design/images/228/products/b/Botao-4-furos-50-unidades-Amarelo.jpg"
-  baixar = Download()
-  id, imagem = baixar.baixarArquivo(url)
-  atual = Imagem(id, imagem)
-  filtro = Filtro_Negativo()
-  filtro.aplicar_filtro_negativo(atual)
-"""
+
 class Filtro_Cartoon:
   def _init_(self):
   #def _init_(self):
@@ -82,3 +73,38 @@ class Filtro_Cartoon:
             print("Erro ao carregar a imagem.")
 
           return self.cartoon_image
+  
+class Filtro_Blurred:
+  def __init__(self):
+    self.blurred_file_name = None
+    self.blurred_image = None
+
+  def aplicar_filtro_blurred(self, objeto_imagem):
+     #mostrar imagem sem o filtro
+     objeto_imagem.imagem.show()
+     
+     #aplicar filtro na imagem
+     self.blurred_image = objeto_imagem.imagem.filter(ImageFilter.BLUR)
+     self.blurred_image.format = objeto_imagem.imagem.format
+
+     #mostrar imagem com filtro
+     self.blurred_image.show()
+
+     #salvar imagem com o nome "blured" antes do nome da imagem
+     self.blurred_file_name = f"blurred_{objeto_imagem.nome}"
+     self.blurred_image.save(self.blurred_file_name)
+     
+     #path = rf"C:\Users\Gabri\OneDrive\Documentos\GitHub\ProjetoFinal---LaboratorioDeProgramacao\corrente\{objeto_imagem.nome}"     
+
+     #self.blurred_image.save(path, self.blurred_image.format)
+
+
+"""
+if __name__ == "__main__":
+  #url = r"C:\Users\luand\OneDrive\Documentos\2024-indefinido\UFPI\2024.2\Estrutura de Dados\PDF's\11895-verde.jpg"
+  url = "https://mobilidade.estadao.com.br/wp-content/uploads/2021/11/carro-por-assinatura-o-ano-todo.jpg"
+  id, imagem = baixar.baixarArquivo(url)
+  atual = Imagem(id, imagem)
+  filtro = Filtro_Blurred()
+  filtro.aplicar_filtro_blurred(atual)
+"""
