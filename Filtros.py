@@ -14,23 +14,17 @@ class Filtro_Negativo:
         self.negativo_image = None
 
     #def aplicar_filtro(self, url):
-    def aplicar_filtro_negativo(self, objeto_imagem):
+    def aplicar_filtro_negativo(self, objeto_imagem, path):
 
-        #nome_imagem, imagem = baixar.baixarArquivo(url)
         objeto_imagem.imagem.show()
-        #Retirar as duas linhas acima
 
-        #im_invert = ImageOps.invert(imagem)
         self.negativo_image = ImageOps.invert(objeto_imagem.imagem)
+
         self.negativo_image.format = objeto_imagem.imagem.format
 
-        #im_invert.show()
         self.negativo_image.show()
-        #name = f"negative_{nome_imagem}"
-        self.negativo_file_name = f"{objeto_imagem.nome}"
 
-        #im_invert.save(name, format=imagem.format)
-        path = rf"C:\Users\luand\OneDrive\Documentos\2024-indefinido\UFPI\2024.2\Laboratorio de Programacao\ProjetoFinal\DataAnalysis---Laboratorio-de-Programacao\corrente\negative_{objeto_imagem.nome}"
+        self.negativo_file_name = f"{objeto_imagem.nome}"
 
         self.negativo_image.save(path, self.negativo_image.format)
 

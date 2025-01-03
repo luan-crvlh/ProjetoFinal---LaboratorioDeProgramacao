@@ -40,4 +40,5 @@ Luanderson: filtro negativo - modificar os parâmetros do método
 Imagem: esboçar a classe imagem, preparar o ambiente para controle dos objetos ImageFile
 Filtros: quem puder, já ir implementando o seu
 Principal: implementar a função número 1 (baixar imagem) - OBS: executar o código em CMD (admin)
+Receber o arquivo que o usuário quer escolher com a interface do windows explorer
 
