@@ -97,6 +97,32 @@ class Filtro_Blurred:
      #path = rf"C:\Users\Gabri\OneDrive\Documentos\GitHub\ProjetoFinal---LaboratorioDeProgramacao\corrente\{objeto_imagem.nome}"     
 
      #self.blurred_image.save(path, self.blurred_image.format)
+class Filtro_Contorno:
+    def __init__(self):
+        self.contorno_file_name = None
+        self.contorno_image = None
+
+    def aplicar_filtro(self, url):
+        # Baixar a imagem
+        nome_imagem, imagem = baixar.baixarArquivo(url)
+        imagem.show(title="Imagem Original")  # Exibir imagem original (opcional)
+
+        # Aplicar o filtro de contorno
+        contorno_image = imagem.filter(ImageFilter.CONTOUR)
+
+        # Manter as cores originais ao sobrepor o contorno
+        contorno_image_color = ImageChops.multiply(imagem, contorno_image.convert("RGB"))
+
+        # Salvar a imagem com o filtro de contorno no diretório atual
+        base_nome_imagem = os.path.basename(nome_imagem)
+        self.contorno_file_name = f"contorno_{base_nome_imagem}"
+        contorno_image_color.save(self.contorno_file_name, format=imagem.format)
+
+        # Exibir a imagem com o filtro de contorno com o título "FILTROCONTORNO"
+        contorno_image_color.show(title="FILTROCONTORNO")
+
+        print(f"Imagem com filtro de contorno salva como '{self.contorno_file_name}'")
+
 
 
 """
@@ -107,4 +133,6 @@ if __name__ == "__main__":
   atual = Imagem(id, imagem)
   filtro = Filtro_Blurred()
   filtro.aplicar_filtro_blurred(atual)
+  filtro_contorno = Filtro_Contorno()
+  filtro_contorno.aplicar_filtro(url_imagem)
 """
