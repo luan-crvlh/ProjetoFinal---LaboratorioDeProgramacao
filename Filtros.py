@@ -8,7 +8,6 @@ from PIL import Image, ImageFilter, ImageEnhance, ImageOps, ImageChops
 
 baixar = Download()
 class Filtro_Negativo:
-    #def _init_(self):
     def _init_(self):
         self.negativo_file_name = None
         self.negativo_image = None
@@ -36,7 +35,6 @@ class Filtro_Negativo:
 
 class Filtro_Cartoon:
   def _init_(self):
-  #def _init_(self):
     self.cartoon_file_name = None
     self.cartoon_image = None
   def aplicar_filtro_cartoon(self, image, file_name):
