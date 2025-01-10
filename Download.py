@@ -5,10 +5,10 @@ from tqdm import tqdm
 from PIL import Image
 
 PROTOCOLOS_SUPORTADOS = ('http', 'https', 'ftp')
-FORMATOS = ["PNG", "JPG", "JPEG"]
+FORMATOS = ("PNG", "JPG", "JPEG")
 
 class Download:
-    def baixarArquivo(self, url): # Verifica a origem do arquivo e já retorna o nome do arquivo e um objeto ImageFile correspondente. OBS: NESSA ORDEM!!!!!
+    def baixarArquivo(self, url, path): # Verifica a origem do arquivo e já retorna o nome do arquivo e um objeto ImageFile correspondente. OBS: NESSA ORDEM!!!!!
         # Gerar um nome único para o arquivo baseado no timestamp
         timestamp = int(time.time())  # Usar o timestamp atual
 
@@ -46,7 +46,6 @@ class Download:
 
                 # Se o formato for válido, salvar a imagem com o formato correto
                 new_file_path = f"{file_path}.{image.format.lower()}"
-                path = rf"C:\Users\Gabri\OneDrive\Documentos\GitHub\ProjetoFinal---LaboratorioDeProgramacao\corrente\{new_file_path}"
                 image.save(path, image.format.lower())
                 print(f"Imagem salva como '{new_file_path}'.")
 
@@ -73,7 +72,6 @@ class Download:
                         print(f"Formato {image.format} não é válido. A imagem não será salva.")
                         raise TypeError
                     file_path = file_path + f".{image.format.lower()}"
-                    path = rf"C:\Users\Gabri\OneDrive\Documentos\GitHub\ProjetoFinal---LaboratorioDeProgramacao\corrente\{file_path}"
                     image.save(path, image.format.lower())
                     return file_path, image
                 except Exception as e:
