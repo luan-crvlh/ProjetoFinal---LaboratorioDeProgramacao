@@ -24,7 +24,8 @@ class Filtro_Negativo:
         self.negativo_image.show()
 
         self.negativo_file_name = f"{objeto_imagem.nome}"
-
+        timestamp = time.time()
+        path = path +"\\"+f"negative_image_{timestamp}.{self.negativo_image.format}"
         self.negativo_image.save(path, self.negativo_image.format)
 
 class Filtro_Cartoon:
@@ -71,7 +72,7 @@ class Filtro_Blurred:
     self.blurred_file_name = None
     self.blurred_image = None
 
-  def aplicar_filtro_blurred(self, objeto_imagem):
+  def aplicar_filtro_blurred(self, objeto_imagem, path):
      #mostrar imagem sem o filtro
      objeto_imagem.imagem.show()
      
@@ -84,7 +85,9 @@ class Filtro_Blurred:
 
      #salvar imagem com o nome "blured" antes do nome da imagem
      self.blurred_file_name = f"blurred_{objeto_imagem.nome}"
-     self.blurred_image.save(self.blurred_file_name)
+     timestamp = time.time()
+     path = path +"\\"+f"blurred_image_{timestamp}.{self.blurred_image.format}"
+     self.blurred_image.save(path, self.blurred_image.format)
      
      #path = rf"C:\Users\Gabri\OneDrive\Documentos\GitHub\ProjetoFinal---LaboratorioDeProgramacao\corrente\{objeto_imagem.nome}"     
 
@@ -94,33 +97,31 @@ class Filtro_Contorno:
         self.contorno_file_name = None
         self.contorno_image = None
 
-    def aplicar_filtro(self, url):
+    def aplicar_filtro(self, objeto_imagem, path):
         # Baixar a imagem
-        nome_imagem, imagem = baixar.baixarArquivo(url)
-        imagem.show(title="Imagem Original")  # Exibir imagem original (opcional)
-
+        imagem = objeto_imagem
         # Aplicar o filtro de contorno
-        contorno_image = imagem.filter(ImageFilter.CONTOUR)
+        contorno_image = imagem.imagem.filter(ImageFilter.CONTOUR)
 
         # Manter as cores originais ao sobrepor o contorno
-        contorno_image_color = ImageChops.multiply(imagem, contorno_image.convert("RGB"))
+        contorno_image_color = ImageChops.multiply(imagem.imagem, contorno_image.convert("RGB"))
 
         # Salvar a imagem com o filtro de contorno no diretório atual
-        base_nome_imagem = os.path.basename(nome_imagem)
-        self.contorno_file_name = f"contorno_{base_nome_imagem}"
-        contorno_image_color.save(self.contorno_file_name, format=imagem.format)
+        timestamp = time.time()
+        path = path +"\\"+f"contorno_image_{timestamp}.{imagem.imagem.format}"
+        contorno_image_color.save(path, format=imagem.imagem.format)
 
         # Exibir a imagem com o filtro de contorno com o título "FILTROCONTORNO"
         contorno_image_color.show(title="FILTROCONTORNO")
 
-        print(f"Imagem com filtro de contorno salva como '{self.contorno_file_name}'")
+        print(f"Imagem com filtro de contorno salva como '{path}'")
 
 class Filtro_PretoBranco:
     def __init__(self):
         self.preto_branco_file_name = None
         self.preto_branco_image = None
 
-    def aplicar_filtro_preto_branco(self, objeto_imagem, limiar=128):
+    def aplicar_filtro_preto_branco(self, objeto_imagem, path, limiar=128):
         # Mostrar imagem original
         objeto_imagem.imagem.show()
 
@@ -133,27 +134,39 @@ class Filtro_PretoBranco:
 
         # Salvar imagem com o nome "preto_branco" antes do nome da imagem
         self.preto_branco_file_name = f"preto_branco_{objeto_imagem.nome}"
-        self.preto_branco_image.save(self.preto_branco_file_name)
+        timestamp = time.time()
+        path = path +"\\"+f"pretobranco_image_{timestamp}.{self.preto_branco_image.format}"
+        self.preto_branco_image.save(path, self.preto_branco_image.format)
 
 class Filtro_EscalaCinza:
     def __init__(self):
         self.escala_cinza_file_name = None
         self.escala_cinza_image = None
 
-    def aplicar_filtro_escala_cinza(self, objeto_imagem):
-        imagem = Image.open(objeto_imagem.imagem)
+    def aplicar_filtro_escala_cinza(self, objeto_imagem, path):
+        imagem = objeto_imagem.imagem
         imagem.show()
         self.escala_cinza_image = imagem.convert("L")
         self.escala_cinza_image.format = imagem.format
         self.escala_cinza_image.show()
         self.escala_cinza_file_name = f"escala_cinza_{objeto_imagem.nome}"
-        self.escala_cinza_image.save(self.escala_cinza_file_name)
+        timestamp = time.time()
+        path = path +"\\"+f"escalacinza_image_{timestamp}.{self.escala_cinza_image.format}"
+        self.escala_cinza_image.save(path)
 
 if __name__ == '__main__':
   baixar =Download()
-  url = "https://static.vecteezy.com/ti/fotos-gratis/t1/41436456-ai-gerado-cinematografico-imagem-do-uma-leao-dentro-uma-natureza-panorama-foto.jpg"
+  url = "https://img.freepik.com/fotos-premium/uma-imagem-digital-da-terra-com-a-europa-nela_902846-5807.jpg"
   path = r"C:\Users\luand\OneDrive\Documentos\2024-indefinido\UFPI\2024.2\Laboratorio de Programacao\ProjetoFinal\DataAnalysis---Laboratorio-de-Programacao\corrente"
   nome, imagem = baixar.baixarArquivo(url, path)
   objeto_imagem = Imagem(nome, imagem)
   Negativo = Filtro_Negativo()
   Negativo.aplicar_filtro_negativo(objeto_imagem, path)
+  ec = Filtro_EscalaCinza()
+  ec.aplicar_filtro_escala_cinza(objeto_imagem, path)
+  Preto = Filtro_PretoBranco()
+  Preto.aplicar_filtro_preto_branco(objeto_imagem, path)
+  blurred = Filtro_Blurred()
+  blurred.aplicar_filtro_blurred(objeto_imagem, path)
+  contorno = Filtro_Contorno()
+  contorno.aplicar_filtro(objeto_imagem, path)
