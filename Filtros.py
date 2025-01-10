@@ -150,6 +150,10 @@ class Filtro_EscalaCinza:
         self.escala_cinza_image.save(self.escala_cinza_file_name)
 
 if __name__ == '__main__':
-  filtro = Filtro_EscalaCinza()
-  imagem = Imagem( "negative_image", 'corrente\\negative_image.JPEG')
-  filtro.aplicar_filtro_escala_cinza(imagem)
+  baixar =Download()
+  url = "https://static.vecteezy.com/ti/fotos-gratis/t1/41436456-ai-gerado-cinematografico-imagem-do-uma-leao-dentro-uma-natureza-panorama-foto.jpg"
+  path = r"C:\Users\luand\OneDrive\Documentos\2024-indefinido\UFPI\2024.2\Laboratorio de Programacao\ProjetoFinal\DataAnalysis---Laboratorio-de-Programacao\corrente"
+  nome, imagem = baixar.baixarArquivo(url, path)
+  objeto_imagem = Imagem(nome, imagem)
+  Negativo = Filtro_Negativo()
+  Negativo.aplicar_filtro_negativo(objeto_imagem, path)
