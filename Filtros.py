@@ -141,21 +141,15 @@ class Filtro_EscalaCinza:
         self.escala_cinza_image = None
 
     def aplicar_filtro_escala_cinza(self, objeto_imagem):
-        objeto_imagem.imagem.show()
-        self.escala_cinza_image = objeto_imagem.imagem.convert("L")
-        self.escala_cinza_image.format = objeto_imagem.imagem.format
+        imagem = Image.open(objeto_imagem.imagem)
+        imagem.show()
+        self.escala_cinza_image = imagem.convert("L")
+        self.escala_cinza_image.format = imagem.format
         self.escala_cinza_image.show()
         self.escala_cinza_file_name = f"escala_cinza_{objeto_imagem.nome}"
         self.escala_cinza_image.save(self.escala_cinza_file_name)
 
-"""
-if __name__ == "__main__":
-  #url = r"C:\Users\luand\OneDrive\Documentos\2024-indefinido\UFPI\2024.2\Estrutura de Dados\PDF's\11895-verde.jpg"
-  url = "https://mobilidade.estadao.com.br/wp-content/uploads/2021/11/carro-por-assinatura-o-ano-todo.jpg"
-  id, imagem = baixar.baixarArquivo(url)
-  atual = Imagem(id, imagem)
-  filtro = Filtro_Blurred()
-  filtro.aplicar_filtro_blurred(atual)
-  filtro_contorno = Filtro_Contorno()
-  filtro_contorno.aplicar_filtro(url_imagem)
-"""
+if __name__ == '__main__':
+  filtro = Filtro_EscalaCinza()
+  imagem = Imagem( "negative_image", 'corrente\\negative_image.JPEG')
+  filtro.aplicar_filtro_escala_cinza(imagem)
