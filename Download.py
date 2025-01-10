@@ -1,29 +1,25 @@
 import time
 import os
 import requests
-from tqdm import tqdm
+from tqdm import *
 from PIL import Image
 
 PROTOCOLOS_SUPORTADOS = ('http', 'https', 'ftp')
 FORMATOS = ("PNG", "JPG", "JPEG")
 
 class Download:
-    def baixarArquivo(self, url, path): # Verifica a origem do arquivo e já retorna o nome do arquivo e um objeto ImageFile correspondente. OBS: NESSA ORDEM!!!!!
-        # Gerar um nome único para o arquivo baseado no timestamp
-        timestamp = int(time.time())  # Usar o timestamp atual
+    def baixarArquivo(self, url, path):
+        timestamp = int(time.time())
 
-        # Verificar se a URL é da internet ou local
         if url.lower().startswith(PROTOCOLOS_SUPORTADOS):
             try:
-                file_path = f"downloaded_image_{timestamp}"
                 # Fazer o download da imagem com barra de progresso
                 response = requests.get(url, stream=True)
                 response.raise_for_status()
-                # Obter o tamanho total do arquivo (em bytes)
                 total_size = int(response.headers.get('content-length', 0))
 
                 # Baixar com barra de progresso
-                with open(file_path, "wb") as file, tqdm(
+                with open(f"temp_image_{timestamp}", "wb") as file, tqdm(
                     desc="Baixando",
                     total=total_size,
                     unit="B",
@@ -34,26 +30,23 @@ class Download:
                         file.write(chunk)
                         bar.update(len(chunk))
 
-                print(f"Imagem baixada como '{file_path}'.")
+                print(f"Imagem baixada como 'temp_image_{timestamp}'.")
 
                 # Abrir a imagem baixada com Pillow
-                image = Image.open(file_path)
-                # Verificar se o formato é válido
+                image = Image.open(f"temp_image_{timestamp}")
                 if image.format not in FORMATOS:
                     print(f"Formato {image.format} não é válido. A imagem não será salva.")
-                    os.remove(file_path)  # Remover o arquivo binário inválido
+                    os.remove(f"temp_image_{timestamp}")
                     raise ValueError
+                path_arquivo = path +"\\"+ f"downloaded_image_{timestamp}.{image.format}"
+                # Salvar a imagem no caminho desejado
+                image.save(path_arquivo, image.format.lower())
+                print(f"Imagem salva como '{path_arquivo}'.")
 
-                # Se o formato for válido, salvar a imagem com o formato correto
-                new_file_path = f"{file_path}.{image.format.lower()}"
-                image.save(path, image.format.lower())
-                print(f"Imagem salva como '{new_file_path}'.")
+                # Remover o arquivo temporário
+                os.remove(f"temp_image_{timestamp}")
 
-                # Remover o arquivo binário
-                os.remove(file_path)
-                # Pegar apenas o nome do arquivo
-
-                return new_file_path, image
+                return path_arquivo, image
 
             except Exception as e:
                 print(f"Erro ao baixar a imagem: {e}")
@@ -62,33 +55,20 @@ class Download:
             # Tratar como caminho local
             if os.path.exists(url):
                 try:
-                    file_path = f"local_image_{timestamp}"
-                    # Abrir a imagem local com Pillow
                     image = Image.open(url)
-                    print(f"Imagem carregada como {file_path} a partir do caminho local.")
+                    print(f"Imagem carregada a partir do caminho local.")
 
-                    # Verificar se o formato da imagem local é válido
                     if image.format not in FORMATOS:
                         print(f"Formato {image.format} não é válido. A imagem não será salva.")
                         raise TypeError
-                    file_path = file_path + f".{image.format.lower()}"
-                    image.save(path, image.format.lower())
-                    return file_path, image
+
+                    # Salvar a imagem no caminho desejado
+                    path_arquivo = path +"\\"+ f"local_image_{timestamp}.{image.format}"
+                    image.save(path_arquivo, image.format.lower())
+                    return path_arquivo, image
                 except Exception as e:
                     print(f"Erro ao carregar a imagem local: {e}")
                     raise TypeError
             else:
                 print("Caminho local inválido ou arquivo não encontrado.")
                 raise NameError
-"""
-# Testar a classe Download
-url = input("Digite a URL da imagem ou o caminho local: ")
-download = Download()
-file_path, imagem = download.baixarArquivo(url)
-#foto = Imagem(file_path, imagem) -- Formato básico esperado para criação de objeto da classe Imagem
-if imagem:
-    # Recarregar a imagem salva no formato correto fora do método baixarArquivo
-    imagem = Image.open(file_path)
-    # Exibir a imagem
-    imagem.show()
-"""
