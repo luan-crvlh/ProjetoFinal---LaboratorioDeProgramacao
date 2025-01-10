@@ -8,7 +8,6 @@ from PIL import Image, ImageFilter, ImageEnhance, ImageOps, ImageChops
 
 baixar = Download()
 class Filtro_Negativo:
-    #def _init_(self):
     def _init_(self):
         self.negativo_file_name = None
         self.negativo_image = None
@@ -30,7 +29,6 @@ class Filtro_Negativo:
 
 class Filtro_Cartoon:
   def _init_(self):
-  #def _init_(self):
     self.cartoon_file_name = None
     self.cartoon_image = None
   def aplicar_filtro_cartoon(self, image, file_name):
@@ -91,7 +89,64 @@ class Filtro_Blurred:
      #path = rf"C:\Users\Gabri\OneDrive\Documentos\GitHub\ProjetoFinal---LaboratorioDeProgramacao\corrente\{objeto_imagem.nome}"     
 
      #self.blurred_image.save(path, self.blurred_image.format)
+class Filtro_Contorno:
+    def __init__(self):
+        self.contorno_file_name = None
+        self.contorno_image = None
 
+    def aplicar_filtro(self, url):
+        # Baixar a imagem
+        nome_imagem, imagem = baixar.baixarArquivo(url)
+        imagem.show(title="Imagem Original")  # Exibir imagem original (opcional)
+
+        # Aplicar o filtro de contorno
+        contorno_image = imagem.filter(ImageFilter.CONTOUR)
+
+        # Manter as cores originais ao sobrepor o contorno
+        contorno_image_color = ImageChops.multiply(imagem, contorno_image.convert("RGB"))
+
+        # Salvar a imagem com o filtro de contorno no diretório atual
+        base_nome_imagem = os.path.basename(nome_imagem)
+        self.contorno_file_name = f"contorno_{base_nome_imagem}"
+        contorno_image_color.save(self.contorno_file_name, format=imagem.format)
+
+        # Exibir a imagem com o filtro de contorno com o título "FILTROCONTORNO"
+        contorno_image_color.show(title="FILTROCONTORNO")
+
+        print(f"Imagem com filtro de contorno salva como '{self.contorno_file_name}'")
+
+class Filtro_PretoBranco:
+    def __init__(self):
+        self.preto_branco_file_name = None
+        self.preto_branco_image = None
+
+    def aplicar_filtro_preto_branco(self, objeto_imagem, limiar=128):
+        # Mostrar imagem original
+        objeto_imagem.imagem.show()
+
+        # Converter para preto e branco usando um limiar
+        self.preto_branco_image = objeto_imagem.imagem.convert("L").point(lambda p: p > limiar and 255, mode='1')
+        self.preto_branco_image.format = objeto_imagem.imagem.format
+
+        # Mostrar imagem com filtro
+        self.preto_branco_image.show()
+
+        # Salvar imagem com o nome "preto_branco" antes do nome da imagem
+        self.preto_branco_file_name = f"preto_branco_{objeto_imagem.nome}"
+        self.preto_branco_image.save(self.preto_branco_file_name)
+
+class Filtro_EscalaCinza:
+    def __init__(self):
+        self.escala_cinza_file_name = None
+        self.escala_cinza_image = None
+
+    def aplicar_filtro_escala_cinza(self, objeto_imagem):
+        objeto_imagem.imagem.show()
+        self.escala_cinza_image = objeto_imagem.imagem.convert("L")
+        self.escala_cinza_image.format = objeto_imagem.imagem.format
+        self.escala_cinza_image.show()
+        self.escala_cinza_file_name = f"escala_cinza_{objeto_imagem.nome}"
+        self.escala_cinza_image.save(self.escala_cinza_file_name)
 
 """
 if __name__ == "__main__":
@@ -101,4 +156,6 @@ if __name__ == "__main__":
   atual = Imagem(id, imagem)
   filtro = Filtro_Blurred()
   filtro.aplicar_filtro_blurred(atual)
+  filtro_contorno = Filtro_Contorno()
+  filtro_contorno.aplicar_filtro(url_imagem)
 """
