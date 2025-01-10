@@ -121,7 +121,38 @@ class Filtro_Contorno:
 
         print(f"Imagem com filtro de contorno salva como '{self.contorno_file_name}'")
 
+class Filtro_PretoBranco:
+    def __init__(self):
+        self.preto_branco_file_name = None
+        self.preto_branco_image = None
 
+    def aplicar_filtro_preto_branco(self, objeto_imagem, limiar=128):
+        # Mostrar imagem original
+        objeto_imagem.imagem.show()
+
+        # Converter para preto e branco usando um limiar
+        self.preto_branco_image = objeto_imagem.imagem.convert("L").point(lambda p: p > limiar and 255, mode='1')
+        self.preto_branco_image.format = objeto_imagem.imagem.format
+
+        # Mostrar imagem com filtro
+        self.preto_branco_image.show()
+
+        # Salvar imagem com o nome "preto_branco" antes do nome da imagem
+        self.preto_branco_file_name = f"preto_branco_{objeto_imagem.nome}"
+        self.preto_branco_image.save(self.preto_branco_file_name)
+
+class Filtro_EscalaCinza:
+    def __init__(self):
+        self.escala_cinza_file_name = None
+        self.escala_cinza_image = None
+
+    def aplicar_filtro_escala_cinza(self, objeto_imagem):
+        objeto_imagem.imagem.show()
+        self.escala_cinza_image = objeto_imagem.imagem.convert("L")
+        self.escala_cinza_image.format = objeto_imagem.imagem.format
+        self.escala_cinza_image.show()
+        self.escala_cinza_file_name = f"escala_cinza_{objeto_imagem.nome}"
+        self.escala_cinza_image.save(self.escala_cinza_file_name)
 
 """
 if __name__ == "__main__":
