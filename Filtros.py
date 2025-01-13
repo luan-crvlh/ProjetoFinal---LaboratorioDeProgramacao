@@ -32,12 +32,12 @@ class Filtro_Cartoon:
   def _init_(self):
     self.cartoon_file_name = None
     self.cartoon_image = None
-  def aplicar_filtro_cartoon(self, image, file_name):
-  #def aplicar_filtro_cartoon(self, objeto_imagem):
-          if image:
+
+  def aplicar_filtro_cartoon(self, objeto_imagem, path):
+    if objeto_imagem.imagem:
             print("Imagem carregada com sucesso pela classe Filtro_Cartoon.")
             # Passo 1: Converter para escala de cinza
-            gray_image = image.convert("L")
+            gray_image = objeto_imagem.imagem("L")
 
             # Passo 2: Aplicar um desfoque gaussiano à imagem original
             blurred_image = gray_image.filter(ImageFilter.GaussianBlur(radius=2))  # Diminuiu o desfoque
@@ -46,7 +46,7 @@ class Filtro_Cartoon:
             edges = gray_image.filter(ImageFilter.FIND_EDGES).filter(ImageFilter.EDGE_ENHANCE_MORE)
 
             # Passo 4: Combinar as bordas com a imagem colorida
-            combined_image = Image.composite(image, image, edges)
+            combined_image = Image.composite(objeto_imagem.imagem, objeto_imagem.imagem, edges)
 
             # Passo 5: Reduzir a paleta de cores
             reduced_palette_image = ImageOps.posterize(combined_image, bits=3)
@@ -57,16 +57,16 @@ class Filtro_Cartoon:
             if final_image:
               self.cartoon_image = final_image
               self.cartoon_file_name = f"cartoon_{file_name}"
-              self.cartoon_image.save(self.cartoon_file_name)
+              self.cartoon_image.save(path, objeto_imagem.imagem.format)
               print("Sucesso na aplicação do filtro cartoon!")
               print(f"Imagem com filtro cartoon salva como '{self.cartoon_file_name}'.")
             else:
               print("Erro ao aplicar o filtro cartoon.")
-          else:
-            print("Erro ao carregar a imagem.")
+    else:
+              print("Erro ao carregar a imagem.")
 
-          return self.cartoon_image
-  
+    return self.cartoon_image
+
 class Filtro_Blurred:
   def __init__(self):
     self.blurred_file_name = None
