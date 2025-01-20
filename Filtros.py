@@ -33,12 +33,16 @@ def aplicar_filtro_cartoon():
     caminho_imagem = obter_caminho_imagem()
     imagem = Image.open(caminho_imagem)
     objeto_imagem = Imagem("imagem_filtrada.jpeg", imagem)
-    gray_image = objeto_imagem.imagem.convert("L")
-    blurred_image = gray_image.filter(ImageFilter.GaussianBlur(radius=2))
-    edges = gray_image.filter(ImageFilter.FIND_EDGES).filter(ImageFilter.EDGE_ENHANCE_MORE)
-    combined_image = Image.composite(objeto_imagem.imagem, objeto_imagem.imagem, edges)
+    blurred_image = objeto_imagem.imagem.filter(ImageFilter.GaussianBlur(radius=2))  # Redução no raio do desfoque
+    edges = objeto_imagem.imagem.filter(ImageFilter.FIND_EDGES).filter(ImageFilter.EDGE_ENHANCE)
+    edges = edges.convert("L")  # Certifica-se de que a máscara esteja no modo correto
+    combined_image = Image.composite(objeto_imagem.imagem, blurred_image, edges)
     reduced_palette_image = ImageOps.posterize(combined_image, bits=3)
-    final_image = ImageEnhance.Sharpness(reduced_palette_image).enhance(2.0)
+    enhancer = ImageEnhance.Color(reduced_palette_image)
+    saturated_image = enhancer.enhance(1.40)  # Saturação ajustada para 1.65
+    contrast_enhancer = ImageEnhance.Contrast(saturated_image)
+    high_contrast_image = contrast_enhancer.enhance(1.10)  # Contraste ajustado para 1.15
+    final_image = ImageEnhance.Sharpness(high_contrast_image).enhance(2.00)  # Sharpness ajustado para 2.25
     salvar_imagem(final_image, objeto_imagem.nome)
 
 def aplicar_filtro_blurred():
@@ -51,10 +55,12 @@ def aplicar_filtro_blurred():
 def aplicar_filtro_contorno():
     caminho_imagem = obter_caminho_imagem()
     imagem = Image.open(caminho_imagem)
-    objeto_imagem = Imagem("imagem_filtrada.jpeg", imagem)
-    contorno_image = objeto_imagem.imagem.filter(ImageFilter.CONTOUR)
-    contorno_image_color = ImageChops.multiply(objeto_imagem.imagem, contorno_image.convert("RGB"))
-    salvar_imagem(contorno_image_color, objeto_imagem.nome)
+    contorno_image = imagem.filter(ImageFilter.CONTOUR)
+    contorno_image = contorno_image.filter(ImageFilter.SHARPEN)  # Aplique o filtro de nitidez
+    imagem_gray = imagem.convert("L")
+    mascara = imagem_gray.point(lambda x: 255 if x > 128 else 0, mode='1')
+    contorno_image_masked = Image.composite(contorno_image, Image.new("RGB", imagem.size, (255, 255, 255)), mascara)
+    salvar_imagem(contorno_image_masked, "imagem_filtrada.jpeg")
 
 def aplicar_filtro_preto_branco():
     caminho_imagem = obter_caminho_imagem()
